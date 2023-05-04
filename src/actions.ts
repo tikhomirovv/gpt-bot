@@ -64,6 +64,16 @@ export async function hearsText(ctx: BotContext) {
     }
 }
 
+export async function reset(ctx: BotContext) {
+    try {
+        ctx.session = newSession(ctx.from)
+        Logger.debug("Reset session: ", ctx.session)
+        await ctx.reply("Представим, что ничего не было и начнём всё сначала 👌")
+    } catch (e: any) {
+        errorReply(ctx, e)
+    }
+}
+
 const editMessage = (ctx: BotContext, waitMessage: Message.TextMessage, text: string | FmtString) => {
     return ctx.telegram.editMessageText(
         waitMessage.chat.id,

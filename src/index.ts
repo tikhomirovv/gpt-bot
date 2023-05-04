@@ -3,7 +3,7 @@ import {  Telegraf, session } from 'telegraf';
 import { message } from 'telegraf/filters';
 import Logger from "js-logger";
 import { BotContext, Environment } from './types';
-import { checkSession, hearsText, hearsVoice, help, start } from './actions';
+import { checkSession, hearsText, hearsVoice, help, reset, start } from './actions';
 
 // Log messages will be written to the window's console.
 Logger.useDefaults();
@@ -16,6 +16,7 @@ bot.use(session(), checkSession)
 
 bot.start(start);
 bot.help(help);
+bot.command('reset', reset)
 bot.on(message('voice'), hearsVoice)
 bot.on(message('text'), hearsText)
 
