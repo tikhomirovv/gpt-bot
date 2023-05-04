@@ -2,7 +2,9 @@
   "name": "gpt-bot",
   "version": "1.0.0",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "NODE_ENV=development nodemon",
+    "build": "NODE_ENV=production tsc",
+    "start": "rm dist -R && yarn build && node ./dist/index.js"
   },
   "repository": "https://github.com/tikhomirovv/gpt-bot.git",
   "author": "Valerii Tikhomirov <v.tikhomirov.dev@gmail.com>",

@@ -1,5 +1,9 @@
 import { Context } from 'telegraf';
-import { Message } from 'telegraf/typings/core/types/typegram';
+
+export enum Environment {
+    Production = 'production',
+    Development = 'development'
+}
 
 export interface BotContext extends Context {
     session: Session
