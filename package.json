@@ -1,0 +1,27 @@
+{
+  "name": "gpt-bot",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "nodemon"
+  },
+  "repository": "https://github.com/tikhomirovv/gpt-bot.git",
+  "author": "Valerii Tikhomirov <v.tikhomirov.dev@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "config": "^3.3.9",
+    "dotenv": "^16.0.3",
+    "ffmpeg": "^0.0.4",
+    "fluent-ffmpeg": "^2.1.2",
+    "js-logger": "^1.6.1",
+    "openai": "^3.2.1",
+    "telegraf": "^4.12.2"
+  },
+  "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.21",
+    "@types/node": "^18.16.3",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}
