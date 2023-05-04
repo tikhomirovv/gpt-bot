@@ -1,9 +1,11 @@
 import { env } from './env'
-import {  Telegraf, session } from 'telegraf';
+import { Telegraf, session } from 'telegraf';
 import { message } from 'telegraf/filters';
 import Logger from "js-logger";
 import { BotContext, Environment } from './types';
-import { checkSession, hearsText, hearsVoice, help, reset, start } from './actions';
+import { hearsText, hearsVoice, help, reset, start } from './actions';
+import { defaultSession } from './session';
+import { checkSession } from './middleware';
 
 // Log messages will be written to the window's console.
 Logger.useDefaults();
@@ -12,7 +14,7 @@ Logger.info("Logger level", LoggerLevel)
 Logger.setLevel(LoggerLevel)
 
 const bot = new Telegraf<BotContext>(env.TELEGRAM_TOKEN)
-bot.use(session(), checkSession)
+bot.use(session({ defaultSession }), checkSession)
 
 bot.start(start);
 bot.help(help);

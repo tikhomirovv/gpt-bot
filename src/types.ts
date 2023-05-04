@@ -5,11 +5,15 @@ export enum Environment {
     Development = 'development'
 }
 
+export interface Session {
+    [id: number]: UserSession
+}
+
 export interface BotContext extends Context {
     session: Session
 }
 
-export interface Session {
+export interface UserSession {
     telegramId: number
     username: string | undefined
     firstname: string
