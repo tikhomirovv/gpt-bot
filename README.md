@@ -17,7 +17,6 @@ GPT Bot - это Telegram бот, который использует OpenAI API
 ```bash
 git clone https://github.com/tikhomirovv/gpt-bot.git
 cd gpt-bot
-yarn install
 ```
 
 Затем создайте файл .env и установите следующие переменные окружения:

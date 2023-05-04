@@ -2,7 +2,8 @@ import { createWriteStream } from 'fs'
 import path, { relative, resolve } from 'path'
 import { unlink } from 'fs/promises'
 import axios from 'axios'
-import ffmpeg from 'fluent-ffmpeg'
+import ffmpeg, { setFfmpegPath } from 'fluent-ffmpeg'
+import installer from '@ffmpeg-installer/ffmpeg'
 import Logger from 'js-logger'
 
 const VOICES_FILES_DIR = resolve(relative(process.cwd(), __filename), '../../voices')
@@ -27,6 +28,8 @@ export const download = async (url: string, filename: string): Promise<string> =
 }
 
 export const convert = async (filename: string): Promise<string> => {
+    ffmpeg.setFfmpegPath(installer.path)
+
     const basename = path.basename(filename, path.extname(filename));
     const output = path.join(path.dirname(filename), basename + '.mp3');
 
