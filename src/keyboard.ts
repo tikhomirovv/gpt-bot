@@ -30,8 +30,8 @@ export const characterKeyboard = Markup.inlineKeyboard([
 
 export const removeKeyboard = Markup.removeKeyboard()
 
-const site: string | null = config.get('url.site')
-const repository: string | null = config.get('url.repository')
+const site: string | null = config.get('contacts.site')
+const repository: string | null = config.get('contacts.repository')
 const helpButtons = [
     site ? Markup.button.url('🌐 Сайт', site) : null,
     repository ? Markup.button.url('⭐ GitHub', repository) : null,

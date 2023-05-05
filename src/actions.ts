@@ -22,11 +22,10 @@ export const help = async (ctx: BotContext) => {
     const session = await getSession(ctx)
     const botVersion: string = packageJson.version.replace(/\./g, '\\.');
     let message = `🤖 *GPT\\-бот v${botVersion}*`
-    const helpMessage = messages.m('help.message')
+    const helpMessage = messages.m('help')
     message += helpMessage ? "\n\n" + helpMessage : ""
     message += `\n
 *ID*: ${session.userId}
-*Имя*: ${session.firstname}
     `
     ctx.replyWithMarkdownV2(message, helpKeyboard)
 }
