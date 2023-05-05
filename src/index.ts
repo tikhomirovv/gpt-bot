@@ -22,7 +22,6 @@ bot.command('reset', reset)
 bot.on(message('voice'), hearsVoice)
 bot.on(message('text'), hearsText)
 
-
 bot.launch();
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));

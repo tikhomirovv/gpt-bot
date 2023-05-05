@@ -2,7 +2,7 @@ import Logger from "js-logger";
 import { env } from "./env";
 import { Configuration, OpenAIApi } from 'openai'
 import { createReadStream } from "fs";
-import { ChatMessage } from "./types";
+import { ChatMessage, UserSession } from "./types";
 
 const CHAT_GPT_MODEL = 'gpt-3.5-turbo'
 const TRANSCRIPTION_MODEL = 'whisper-1'
@@ -17,11 +17,12 @@ class OpenAI {
         this.openai = new OpenAIApi(configuration)
     }
 
-    async chat(messages: ChatMessage[]) {
+    async chat(session: UserSession, messages: ChatMessage[]) {
         try {
             const completion = await this.openai.createChatCompletion({
                 model: CHAT_GPT_MODEL,
                 messages,
+                user: session.userId,
             })
             Logger.debug('Usage', completion.data.usage)
             return completion.data.choices[0].message

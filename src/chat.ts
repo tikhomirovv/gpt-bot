@@ -5,10 +5,10 @@ import { ChatRole, UserSession } from "./types"
 export const chatMessage = async (session: UserSession, text: string): Promise<string> => {
     try {
         session.messages.push({ content: text, role: ChatRole.User })
-        const response = await openai.chat(session.messages)
+        const response = await openai.chat(session, session.messages)
         if (!response) {
             Logger.error("Chat message response error", response)
-            return "Прости, мой интеллект недоступен 😞"
+            return "Прости, мне больше недоступен мой интеллект 😞"
         }
         session.messages.push({ content: response.content, role: ChatRole.Assistant })
         Logger.debug(`Chat messages`, session.messages)

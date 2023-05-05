@@ -14,6 +14,7 @@ export interface BotContext extends Context {
 }
 
 export interface UserSession {
+    userId: string
     telegramId: number
     username: string | undefined
     firstname: string

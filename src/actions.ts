@@ -8,6 +8,7 @@ import { Message } from "telegraf/typings/core/types/typegram"
 import { openai } from "./openai"
 import { chatMessage } from "./chat"
 import { FmtString } from "telegraf/format"
+import { getRandomFromArray } from "./utils"
 
 export const help = async (ctx: BotContext) => {
     const session = await getSession(ctx)
@@ -53,7 +54,11 @@ export async function hearsText(ctx: BotContext) {
             return
         }
         const session = await getSession(ctx)
-        const waitMessage = await ctx.reply(code("🤔 ..."))
+        const waitMessage = await ctx.reply(getRandomFromArray([
+            code("🧠 ..."),
+            code("⏳ ..."),
+            code("🤔 ..."),
+        ]))
         const answer = await chatMessage(session, ctx.message.text)
         await editMessage(ctx, waitMessage, answer)
     } catch (e: any) {
@@ -65,7 +70,13 @@ export async function reset(ctx: BotContext) {
     try {
         const session = await resetSession(ctx)
         Logger.debug("Reset session: ", session)
-        await ctx.reply("Представим, что ничего не было и начнём всё сначала 👌")
+        await ctx.reply(getRandomFromArray([
+            "Ладно, закроем тему 👌",
+            "Вот это называется спонтанная амнезия - сразу все забыл 🤷‍♂️",
+            "Давай поговорим о чём-нибудь другом 💭",
+            "Нить разговора безвозвратно утеряна 🙈",
+            "Ой, опять забыл, кто я, где я и о чем мы говорим 😵",
+        ]))
     } catch (e: any) {
         errorReply(ctx, e)
     }
