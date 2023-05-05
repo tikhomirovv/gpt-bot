@@ -5,6 +5,7 @@ import { createReadStream } from "fs";
 import { ChatMessage, UserSession } from "./types";
 
 const CHAT_GPT_MODEL = 'gpt-3.5-turbo'
+const TEMPERATURE = 0.1
 const TRANSCRIPTION_MODEL = 'whisper-1'
 
 class OpenAI {
@@ -23,6 +24,7 @@ class OpenAI {
                 model: CHAT_GPT_MODEL,
                 messages,
                 user: session.userId,
+                temperature: TEMPERATURE,
             })
             Logger.debug('Usage', completion.data.usage)
             return completion.data.choices[0].message

@@ -30,6 +30,10 @@ export const newSession = async (ctx: BotContext): Promise<UserSession> => {
         username: ctx.from!.username,
         firstname: ctx.from!.first_name,
         messages: [],
+        systemMessages: {
+            role: [],
+            character: []
+        },
     }
 }
 

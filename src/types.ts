@@ -19,6 +19,12 @@ export interface UserSession {
     username: string | undefined
     firstname: string
     messages: ChatMessage[]
+    systemMessages: SystemMessages
+}
+
+export interface SystemMessages {
+    role: ChatMessage[]
+    character: ChatMessage[]
 }
 
 export enum ChatRole {
