@@ -1,6 +1,7 @@
 import { Markup } from "telegraf";
+import config from 'config'
 import { CharacterAction, RoleAction, SettingsAction } from "./settings";
-
+import { InlineKeyboardButton } from "telegraf/typings/core/types/typegram";
 
 export const settingsKeyboard = Markup.inlineKeyboard([
     Markup.button.callback('Роль', SettingsAction.SelectRole),
@@ -28,3 +29,12 @@ export const characterKeyboard = Markup.inlineKeyboard([
 ], { columns: 2 });
 
 export const removeKeyboard = Markup.removeKeyboard()
+
+const site: string | null = config.get('url.site')
+const repository: string | null = config.get('url.repository')
+const helpButtons = [
+    site ? Markup.button.url('🌐 Сайт', site) : null,
+    repository ? Markup.button.url('⭐ GitHub', repository) : null,
+].filter(i => !!i) as (InlineKeyboardButton.CallbackButton | InlineKeyboardButton.UrlButton)[];
+
+export const helpKeyboard = Markup.inlineKeyboard(helpButtons, { columns: 2 });

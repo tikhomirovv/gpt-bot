@@ -34,6 +34,13 @@ export enum ChatRole {
 }
 
 export type ChatMessage = {
-    content: string;
-    role: ChatRole;
+    content: string
+    role: ChatRole
+}
+
+export type GptParameters = {
+    model: string
+    temperature?: number
+    presence_penalty?: number
+    top_p?: number
 }
