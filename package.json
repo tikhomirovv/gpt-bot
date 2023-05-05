@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "scripts": {
     "dev": "NODE_ENV=development nodemon",
-    "build": "NODE_ENV=production tsc",
+    "build": "NODE_ENV=production tsc && cp -R voices ./dist/voices",
     "start": "rm dist -R && yarn build && node ./dist/src/index.js"
   },
   "repository": "https://github.com/tikhomirovv/gpt-bot.git",
