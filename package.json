@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon",
     "build": "NODE_ENV=production tsc",
-    "start": "rm dist -R && yarn build && node ./dist/index.js"
+    "start": "rm dist -R && yarn build && node ./dist/src/index.js"
   },
   "repository": "https://github.com/tikhomirovv/gpt-bot.git",
   "author": "Valerii Tikhomirov <v.tikhomirov.dev@gmail.com>",
