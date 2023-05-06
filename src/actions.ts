@@ -1,4 +1,4 @@
-import { BotContext, ChatMessage, ChatRole } from "./types"
+import { BotContext } from "./types/app"
 import Logger from "js-logger"
 import { message } from "telegraf/filters"
 import { code } from 'telegraf/format'
@@ -8,10 +8,11 @@ import { Message } from "telegraf/typings/core/types/typegram"
 import { openai } from "./openai"
 import { chatMessage } from "./chat"
 import { FmtString } from "telegraf/format"
-import { characterKeyboard, helpKeyboard, roleKeyboard, settingsKeyboard } from "./keyboard"
-import { SettingsAction, getCharacterSystemMessages, getRoleSystemMessages } from "./settings"
+import { characterKeyboard, helpKeyboard } from "./keyboard"
+import { getCharacterSystemMessages } from "./settings"
 import messages from "./messages"
 import * as packageJson from '../package.json';
+import { ChatRole } from "./types/chat"
 
 export const start = async (ctx: BotContext) => {
     const session = await getSession(ctx)
@@ -23,10 +24,7 @@ export const help = async (ctx: BotContext) => {
     const botVersion: string = packageJson.version.replace(/\./g, '\\.');
     let message = `🤖 *GPT\\-бот v${botVersion}*`
     const helpMessage = messages.m('help')
-    message += helpMessage ? "\n\n" + helpMessage : ""
-    message += `\n
-*ID*: ${session.userId}
-    `
+    message += helpMessage ? "\n\n" + helpMessage : `\n*ID*: ${session.userId}`
     ctx.replyWithMarkdownV2(message, helpKeyboard)
 }
 
@@ -90,51 +88,17 @@ export async function reset(ctx: BotContext) {
 
 export async function settings(ctx: BotContext) {
     try {
-        await ctx.reply(messages.m("settings"), settingsKeyboard)
+        await ctx.reply(messages.m("settings"), characterKeyboard)
     } catch (e: any) {
         errorReply(ctx, e)
     }
 }
 
-export async function settingsCallback(ctx: BotContext) {
+export async function characterCallback(ctx: BotContext & { match: RegExpExecArray }) {
     try {
-        // @ts-ignore
-        const action = ctx.callbackQuery?.data;
-        switch (action) {
-            case SettingsAction.SelectRole:
-                ctx.editMessageReplyMarkup(roleKeyboard.reply_markup)
-                break
-            case SettingsAction.SelectCharacter:
-                ctx.editMessageReplyMarkup(characterKeyboard.reply_markup)
-                break
-            default:
-                throw new Error(`No action \`${action}\``)
-        }
-    } catch (e: any) {
-        errorReply(ctx, e)
-    }
-}
-
-export async function roleCallback(ctx: BotContext) {
-    try {
-        // @ts-ignore
-        const action = ctx.callbackQuery?.data;
+        const action = ctx.match[1]
         const session = await getSession(ctx)
-        const systemMessages = await getRoleSystemMessages(action)
-        session.systemMessages.role = systemMessages.map(content => ({ content, role: ChatRole.System }))
-        await ctx.answerCbQuery(messages.m("role.changed"))
-        return ctx.deleteMessage()
-    } catch (e: any) {
-        errorReply(ctx, e)
-    }
-}
-
-export async function characterCallback(ctx: BotContext) {
-    try {
-        // @ts-ignore
-        const action = ctx.callbackQuery?.data;
-        const session = await getSession(ctx)
-        const systemMessages = await getCharacterSystemMessages(action)
+        const systemMessages = await getCharacterSystemMessages(+action)
         session.systemMessages.character = systemMessages.map(content => ({ content, role: ChatRole.System }))
         await ctx.answerCbQuery(messages.m("character.changed"))
         return ctx.deleteMessage()
@@ -142,7 +106,6 @@ export async function characterCallback(ctx: BotContext) {
         errorReply(ctx, e)
     }
 }
-
 
 const editMessage = (ctx: BotContext, waitMessage: Message.TextMessage, text: string | FmtString) => {
     return ctx.telegram.editMessageText(

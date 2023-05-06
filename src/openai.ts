@@ -2,8 +2,9 @@ import Logger from "js-logger";
 import { env } from "./env";
 import { Configuration, OpenAIApi } from 'openai'
 import { createReadStream } from "fs";
-import { ChatMessage, GptParameters, UserSession } from "./types";
+import { UserSession } from "./types/app";
 import config from 'config'
+import { ChatMessage, GptParameters } from "./types/chat";
 
 const TRANSCRIPTION_MODEL = 'whisper-1'
 
@@ -20,7 +21,6 @@ class OpenAI {
     }
 
     async chat(session: UserSession, messages: ChatMessage[]) {
-        Logger.debug("[GPT] Request params", params)
         try {
             const completion = await this.openai.createChatCompletion({
                 user: session.userId,

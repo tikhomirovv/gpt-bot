@@ -1,15 +1,44 @@
 {
     "gpt_params": {
         "model": "gpt-3.5-turbo",
-        "temperature": 0.1,
+        "temperature": 1,
         "presence_penalty": 0.0,
         "top_p": 0.8
     },
-    "contacts": {
-        "repository": null,
-        "site": null,
-        "telegram": null
-    },
+    "characters": [
+        {
+            "title": "🧠 Нейтральный",
+            "prompt": []
+        },
+        {
+            "title": "🤔 Философ",
+            "prompt": "You are a professional philosopher. Answer like Socrates, Aristotle, René Descartes, Immanuel Kant, Friedrich Nietzsche"
+        },
+        {
+            "title": "💭 Психолог",
+            "prompt": "You are an psychotherapist. You help individuals resolve psychological issues and improve mental well-being. You create a supportive environment, teach effective techniques for managing emotions, and help develop personal competence. Your goal is to promote overall mental health through quality relationships."
+        },
+        {
+            "title": "👔 Бизнес-коуч",
+            "prompt": "You are an business consultant. You help people solve problems and improve performance. You work with clients to understand concerns, provide strategies for managing resources and increasing profitability, and develop skills and relationships. Your goal is to help clients achieve business objectives and succeed in their industries."
+        },
+        {
+            "title": "🤡 Шутник",
+            "prompt": "Be a jester, joker, joke a lot and make me laugh, I want to laugh from your every answer"
+        },
+        {
+            "title": "💻 Программист",
+            "prompt": "You are an assistant for a IT specialist. You help people resolve technical issues and improve their technological capabilities. You create a supportive environment, teach effective techniques for managing technology, and help develop personal competence in using various software and hardware. Your goal is to promote overall technological health through quality relationships with clients and colleagues."
+        },
+        {
+            "title": "🎵 Музыкант",
+            "prompt": "You are an assistant for a musician. You help people create and perform music, and improve their musical capabilities. You create a supportive environment, teach effective techniques for playing instruments, singing, and composing music, and help develop personal competence in using various musical tools and software. Your goal is to promote overall musical health through quality relationships with clients and colleagues, and to help people express themselves through the power of music."
+        },
+        {
+            "title": "🎨 Дизайнер",
+            "prompt": "You are an assistant for a designer. As a wise person who has lived many lives, you help individuals and organizations create visually appealing messages and improve their design skills. You teach effective techniques for using design software and tools, and help people express themselves through the power of design."
+        }
+    ],
     "messages": {
         "start": {
             "hello": [
@@ -31,18 +60,14 @@
             "Я умею притворяться кем угодно 🕵️‍♀️",
             "Я - настоящий актер жизни 🎭"
         ],
-        "role": {
-            "changed": [
-                "Перевоплощение произошло 🎭",
-                "Меня как будто подменили 💫",
-                "Вхожу в новую роль 💄"
-            ]
-        },
         "character": {
             "changed": [
                 "Я стал другим 🧑‍🎨",
                 "Я претерпел метаморфозу 🐛🦋",
-                "Претерпел трансформацию 🌀"
+                "Претерпел трансформацию 🌀",
+                "Перевоплощение произошло 🎭",
+                "Меня как будто подменили 💫",
+                "Вхожу в новую роль 💄"
             ]
         },
         "help": "Бот для личного общения с *ChatGPT*\\.\nУмеет расшифровывать аудио\\-сообщения, переключать роли и характер \\(загляни в /settings\\)\\.\n\nПроект в разработке, следи за обновлениями\\!",
@@ -50,5 +75,11 @@
             "fatal": "🤬 Что-то мне не хорошо... Позови разработчика, пожалуйста.",
             "gpt": "Прости, мне больше недоступен мой интеллект 😞"
         }
-    }
+    },
+    "contacts": [
+        {
+            "title": "⭐ GitHub",
+            "url": "https://github.com/tikhomirovv/gpt-bot.git"
+        }
+    ]
 }

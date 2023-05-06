@@ -1,6 +1,7 @@
 import Logger from "js-logger"
 import { openai } from "./openai"
-import { ChatMessage, ChatRole, UserSession } from "./types"
+import { UserSession } from "./types/app"
+import { ChatMessage, ChatRole } from "./types/chat";
 
 const HISTORY_LIMIT = 20;
 
@@ -9,7 +10,6 @@ export const chatMessage = async (session: UserSession, text: string): Promise<s
     session.messages.push({ content: text, role: ChatRole.User })
     session.messages = normalizeHistory(session.messages)
     const history = [
-        ...session.systemMessages.role,
         ...session.systemMessages.character,
         { content: "Отвечай на том языке, на котором я тебе пишу", role: ChatRole.System },
         ...session.messages
@@ -21,7 +21,7 @@ export const chatMessage = async (session: UserSession, text: string): Promise<s
     }
     const reply = response.content
     session.messages.push({ content: reply, role: ChatRole.Assistant })
-    Logger.debug(`Chat messages`, [...session.systemMessages.role, ...session.systemMessages.character, ...session.messages])
+    Logger.debug(`Chat messages`, [...session.systemMessages.character, ...session.messages])
     return reply
 }
 

@@ -1,6 +1,6 @@
 import Logger from "js-logger";
 import md5 from 'crypto-js/md5';
-import { BotContext, Session, UserSession } from "./types";
+import { BotContext, Session, UserSession } from "./types/app";
 
 export const defaultSession = (): Session => ([])
 
@@ -31,7 +31,6 @@ export const newSession = async (ctx: BotContext): Promise<UserSession> => {
         firstname: ctx.from!.first_name,
         messages: [],
         systemMessages: {
-            role: [],
             character: []
         },
     }

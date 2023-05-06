@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { Environment } from './types';
+import { Environment } from './types/app';
 dotenv.config();
 
 interface Env {
