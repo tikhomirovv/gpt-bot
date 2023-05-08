@@ -1,4 +1,4 @@
-import { BotContext } from "./types/app"
+import { BotContext, UserSession } from "./types/app"
 import Logger from "js-logger"
 import { message } from "telegraf/filters"
 import { code } from 'telegraf/format'
@@ -9,7 +9,7 @@ import { openai } from "./openai"
 import { chatMessage } from "./chat"
 import { FmtString } from "telegraf/format"
 import { characterKeyboard, helpKeyboard } from "./keyboard"
-import { getCharacterSystemMessages } from "./settings"
+import { getCharacterSystemMessage } from "./settings"
 import messages from "./messages"
 import * as packageJson from '../package.json';
 import { ChatRole } from "./types/chat"
@@ -44,13 +44,8 @@ export async function hearsVoice(ctx: BotContext) {
         await ctx.reply(code(text))
         await ctx.telegram.sendChatAction(ctx.chat.id, 'typing')
         await remove(mp3)
-        try {
-            const answer = await chatMessage(session, text)
-            await ctx.reply(answer, { reply_to_message_id: ctx.message.message_id })
-        } catch (e) {
-            await ctx.reply(messages.m("error.gpt"))
-            Logger.error(e)
-        }
+        const answer = await sendToChat(ctx, session, text)
+        await ctx.reply(answer, { reply_to_message_id: ctx.message.message_id })
     } catch (e: any) {
         errorReply(ctx, e)
     }
@@ -63,14 +58,8 @@ export async function hearsText(ctx: BotContext) {
         }
         const session = await getSession(ctx)
         await ctx.telegram.sendChatAction(ctx.chat.id, 'typing')
-        try {
-            const answer = await chatMessage(session, ctx.message.text)
-            ctx.reply(answer, { reply_to_message_id: ctx.message.message_id })
-        } catch (e) {
-            await ctx.reply(messages.m("error.gpt"))
-            Logger.error(e)
-
-        }
+        const answer = await sendToChat(ctx, session, ctx.message.text)
+        ctx.reply(answer, { reply_to_message_id: ctx.message.message_id })
     } catch (e: any) {
         errorReply(ctx, e)
     }
@@ -97,11 +86,17 @@ export async function settings(ctx: BotContext) {
 export async function characterCallback(ctx: BotContext & { match: RegExpExecArray }) {
     try {
         const action = ctx.match[1]
-        const session = await getSession(ctx)
-        const systemMessages = await getCharacterSystemMessages(+action)
-        session.systemMessages.character = systemMessages.map(content => ({ content, role: ChatRole.System }))
-        await ctx.answerCbQuery(messages.m("character.changed"))
-        return ctx.deleteMessage()
+        const session = await resetSession(ctx)
+    
+        const message = await getCharacterSystemMessage(+action)
+        const answer = await sendToChat(ctx, session, message)
+        await ctx.answerCbQuery()
+        await ctx.reply(answer)
+        
+        // системные сообщения работают не очень хорошо
+        // гораздо лучше отправлять в чат текстом
+        // session.systemMessages.character.push({ content: message, role: ChatRole.System })
+        return
     } catch (e: any) {
         errorReply(ctx, e)
     }
@@ -114,6 +109,16 @@ const editMessage = (ctx: BotContext, waitMessage: Message.TextMessage, text: st
         undefined, // Use undefined to keep the original markup
         text
     );
+}
+
+const sendToChat = async (ctx: BotContext, session: UserSession, text: string): Promise<string> => {
+    try {
+       return await chatMessage(session, text)
+    } catch (e) {
+        await ctx.reply(messages.m("error.gpt"))
+        Logger.error(e)
+        throw e
+    }
 }
 
 const errorReply = (ctx: BotContext, error: any) => {

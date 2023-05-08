@@ -16,7 +16,7 @@ export interface Link {
 
 export interface Character {
     title: string
-    prompt: string | string[] 
+    prompt: string
 }
 
 export interface Config {
