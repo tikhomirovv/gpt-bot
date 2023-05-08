@@ -9,7 +9,7 @@ export interface Messages {
     [name: string]: Messages | string[] | string;
 }
 
-export interface Contact {
+export interface Link {
     title: string;
     url: string;
 }
@@ -21,7 +21,7 @@ export interface Character {
 
 export interface Config {
     gpt_params: GptParams
-    contacts: Contact[]
+    links: Link[]
     characters: Character[]
     messages: Messages
 }
