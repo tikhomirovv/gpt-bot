@@ -1,6 +1,14 @@
 import dotenv from 'dotenv';
+import path from 'path';
 import { Environment } from './types/app';
-dotenv.config();
+import fs from 'fs';
+
+const local = path.resolve(process.cwd(), ".env.local")
+if (fs.existsSync(local)) {
+  dotenv.config({ path: local });
+} else {
+  dotenv.config();
+}
 
 interface Env {
   TELEGRAM_TOKEN: string
