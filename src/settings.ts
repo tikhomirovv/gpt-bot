@@ -1,8 +1,8 @@
 import config from 'config'
 import { Character } from './types/config'
 
-// getCharacterSystemMessages returns system messages for a character
-export const getCharacterSystemMessage = async (idx: number): Promise<string> => {
+// getCharacterMessage returns system messages for a character
+export const getCharacterMessage = async (idx: number): Promise<string> => {
     const characters: Character[] = config.get("characters")
     const character = characters[idx]
     if (character) {

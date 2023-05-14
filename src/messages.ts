@@ -11,6 +11,7 @@ const replaceParams = (message: string, params: any) => {
 }
 
 export default {
+    // getting message text from config by key
     m(key: string, params: any = {}): string {
         const configKey = 'messages.' + key
         if (config.has(configKey)) {

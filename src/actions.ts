@@ -9,7 +9,7 @@ import { openai } from "./openai"
 import { chatMessage } from "./chat"
 import { FmtString } from "telegraf/format"
 import { characterKeyboard, helpKeyboard } from "./keyboard"
-import { getCharacterSystemMessage } from "./settings"
+import { getCharacterMessage } from "./settings"
 import messages from "./messages"
 import * as packageJson from '../package.json';
 
@@ -97,14 +97,10 @@ export async function characterCallback(ctx: BotContext & { match: RegExpExecArr
         const action = ctx.match[1]
         const session = await resetSession(ctx)
     
-        const message = await getCharacterSystemMessage(+action)
+        const message = await getCharacterMessage(+action)
         const answer = await sendToChat(ctx, session, message)
         await ctx.answerCbQuery()
         await ctx.reply(answer)
-        
-        // системные сообщения работают не очень хорошо
-        // гораздо лучше отправлять в чат текстом
-        // session.systemMessages.character.push({ content: message, role: ChatRole.System })
         return
     } catch (e: any) {
         errorReply(ctx, e)

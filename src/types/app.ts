@@ -1,5 +1,5 @@
 import { Context } from 'telegraf';
-import { ChatMessage, SystemMessages } from './chat';
+import { History } from './chat';
 
 export enum Environment {
     Production = 'production',
@@ -18,6 +18,5 @@ export interface UserSession {
     telegramId: number
     username: string | undefined
     firstname: string
-    messages: ChatMessage[]
-    systemMessages: SystemMessages
+    history: History
 }

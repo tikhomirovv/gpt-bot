@@ -1,4 +1,4 @@
-export type GptParameters = {
+export type GPTParameters = {
     model: string
     temperature?: number
     presence_penalty?: number
@@ -11,11 +11,18 @@ export enum ChatRole {
     Assistant = 'assistant'
 }
 
-export interface SystemMessages {
-    character: ChatMessage[]
+export type History = {
+    messages: ChatMessage[]
+    tokens: number
 }
 
 export type ChatMessage = {
+    content: string
+    role: ChatRole
+    tokens?: number
+}
+
+export type GPTMessage = {
     content: string
     role: ChatRole
 }

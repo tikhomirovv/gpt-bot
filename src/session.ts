@@ -29,10 +29,7 @@ export const newSession = async (ctx: BotContext): Promise<UserSession> => {
         telegramId: id,
         username: ctx.from!.username,
         firstname: ctx.from!.first_name,
-        messages: [],
-        systemMessages: {
-            character: []
-        },
+        history: { messages: [], tokens: 0 },
     }
 }
 
@@ -40,7 +37,6 @@ const setSession = async (ctx: BotContext, session: UserSession): Promise<UserSe
     ctx.session[session.telegramId] = session
     return ctx.session[session.telegramId]
 }
-
 
 export const resetSession = async (ctx: BotContext): Promise<UserSession> => {
     let session = await newSession(ctx)
