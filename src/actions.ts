@@ -31,7 +31,7 @@ export async function hearsVoice(ctx: BotContext) {
     const typing = sendTypingInterval(ctx)
     try {
         if (!ctx.has(message("voice"))) {
-            throw new Error("Попытка обработать голос, но его нет")
+            throw new Error("Attempted to process the voice, but it is not there")
         }
         const session = await getSession(ctx)
 
