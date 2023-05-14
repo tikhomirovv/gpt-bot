@@ -1,13 +1,19 @@
 import { MiddlewareFn } from "telegraf"
 import { BotContext } from "./types/app"
 import { getSession } from "./session"
-import { Config } from "./types/config"
 import config from 'config'
-import Logger from "js-logger"
+import messages from "./messages"
 
-export const checkSession: MiddlewareFn<BotContext> = (ctx: BotContext, next: (() => Promise<void>)): Promise<unknown> | void => {
-    getSession(ctx)
-    next()
+export const checkSession: MiddlewareFn<BotContext> = async (ctx: BotContext, next: (() => Promise<void>)): Promise<unknown> => {
+    const session = await getSession(ctx)
+
+    // check whitelist
+    const whitelist: (string | number)[] | null = config.get('whitelist')
+    if (whitelist && (!whitelist.includes(session.username!)) && (!whitelist.includes(session.telegramId))) {
+        await ctx.reply(messages.m("start.forbidden"))
+        return
+    }
+    return next()
 }
 
 // TODO: сделать проверку соответствия конфигурации

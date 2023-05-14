@@ -20,6 +20,7 @@ export interface Character {
 }
 
 export interface Config {
+    whitelist: (string | number)[] | null
     gpt_params: GptParams
     links: Link[]
     characters: Character[]

@@ -12,7 +12,6 @@ import { characterKeyboard, helpKeyboard } from "./keyboard"
 import { getCharacterSystemMessage } from "./settings"
 import messages from "./messages"
 import * as packageJson from '../package.json';
-import { ChatRole } from "./types/chat"
 
 export const start = async (ctx: BotContext) => {
     const session = await getSession(ctx)
