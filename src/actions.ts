@@ -28,39 +28,49 @@ export const help = async (ctx: BotContext) => {
 }
 
 export async function hearsVoice(ctx: BotContext) {
+    const typing = sendTypingInterval(ctx)
     try {
         if (!ctx.has(message("voice"))) {
             throw new Error("Попытка обработать голос, но его нет")
         }
         const session = await getSession(ctx)
-        ctx.telegram.sendChatAction(ctx.chat.id, 'typing')
+
+        // 1. Get file-link, download, convert
+        const waitMessage = await ctx.reply(code(messages.m("waiting.audio")))
         const link = await ctx.telegram.getFileLink(ctx.message.voice.file_id)
-        const userId = String(ctx.message.from.id)
-        const ogg = await download(link.href, userId)
+        const ogg = await download(link.href, session.userId)
         const mp3 = await convert(ogg)
         await remove(ogg)
+
+        // 2. Transcription
         const text = await openai.transcription(mp3)
-        await ctx.reply(code(text))
-        await ctx.telegram.sendChatAction(ctx.chat.id, 'typing')
         await remove(mp3)
+        await editMessage(ctx, waitMessage, code(text))
+
+        // 3. Get answer
         const answer = await sendToChat(ctx, session, text)
         await ctx.reply(answer, { reply_to_message_id: ctx.message.message_id })
     } catch (e: any) {
         errorReply(ctx, e)
+    } finally {
+        clearInterval(typing)
     }
 }
 
 export async function hearsText(ctx: BotContext) {
+    const typing = sendTypingInterval(ctx)
     try {
         if (!ctx.has(message("text"))) {
             throw new Error("No text in message")
         }
         const session = await getSession(ctx)
-        await ctx.telegram.sendChatAction(ctx.chat.id, 'typing')
+        const waitMessage = await ctx.reply(code(messages.m("waiting.text")), { reply_to_message_id: ctx.message.message_id })
         const answer = await sendToChat(ctx, session, ctx.message.text)
-        ctx.reply(answer, { reply_to_message_id: ctx.message.message_id })
+        await editMessage(ctx, waitMessage, answer)
     } catch (e: any) {
         errorReply(ctx, e)
+    } finally {
+        clearInterval(typing)
     }
 }
 
@@ -99,6 +109,12 @@ export async function characterCallback(ctx: BotContext & { match: RegExpExecArr
     } catch (e: any) {
         errorReply(ctx, e)
     }
+}
+
+// Need to be closed
+const sendTypingInterval = (ctx: BotContext): NodeJS.Timer => {
+    const interval = 5000 // https://core.telegram.org/bots/api#sendchataction
+    return setInterval(() => { ctx.telegram.sendChatAction(ctx.chat!.id, 'typing') }, interval)
 }
 
 const editMessage = (ctx: BotContext, waitMessage: Message.TextMessage, text: string | FmtString) => {
