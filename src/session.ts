@@ -1,6 +1,6 @@
 import Logger from "js-logger";
-import md5 from 'crypto-js/md5';
 import { BotContext, Session, UserSession } from "./types/app";
+import userRepository from "./db/repository/user";
 
 export const defaultSession = (): Session => ([])
 
@@ -23,10 +23,11 @@ export const getSession = async (ctx: BotContext): Promise<UserSession> => {
 }
 
 export const newSession = async (ctx: BotContext): Promise<UserSession> => {
-    const id = await getId(ctx)
+    const telegramId = await getId(ctx)
+    const model = await userRepository.firstOrCreate(telegramId)
     return {
-        userId: md5(id.toString()).toString(),
-        telegramId: id,
+        userId: model._id,
+        telegramId,
         username: ctx.from!.username,
         firstname: ctx.from!.first_name,
         history: { messages: [], tokens: 0 },
