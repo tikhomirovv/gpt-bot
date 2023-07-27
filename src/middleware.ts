@@ -33,8 +33,7 @@ export const checkBalance: MiddlewareFn<BotContext> = async (
   const session = await getSession(ctx)
   const user = await userRepository.getByTelegramId(session.telegramId)
   if (!user) {
-    await ctx.reply(messages.m("start.forbidden"))
-    return
+    return next()
   }
 
   if (user.tokens.balance <= 0) {

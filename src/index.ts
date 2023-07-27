@@ -14,9 +14,6 @@ import {
 } from "./actions"
 import { defaultSession } from "./session"
 import { checkConfig, checkSession, checkBalance } from "./middleware"
-import { connect as dbConnect } from './db/db'
-
-dbConnect()
 
 // Log messages will be written to the window's console.
 Logger.useDefaults()

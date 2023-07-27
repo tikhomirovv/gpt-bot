@@ -10,12 +10,11 @@ export const chatMessage = async (
   session: UserSession,
   text: string,
 ): Promise<string> => {
-  let { history } = addMessageToHistory(session.history, {
+  session.history = addMessageToHistory(session.history, {
     content: text,
     role: ChatRole.User,
     tokens: 0,
-  })
-  session.history = history
+  }).history
   const completion = await openai.chat(
     session.userId,
     getGPTMessages(session.history),
@@ -40,7 +39,10 @@ export const chatMessage = async (
     usage?.total_tokens,
   )
   session.history = result.history
-  Logger.debug("[Chat] UseTokens", { userId: session.userId, usage: result.usage })
+  Logger.debug("[Chat] UseTokens", {
+    userId: session.userId,
+    usage: result.usage,
+  })
   await userRepository.useTokens(session.telegramId, result.usage)
   return replyText
 }
