@@ -3,10 +3,12 @@ import { BotContext } from "./types/app"
 import { getSession } from "./session"
 import config from 'config'
 import messages from "./messages"
+import Logger from "js-logger"
 
 export const checkSession: MiddlewareFn<BotContext> = async (ctx: BotContext, next: (() => Promise<void>)): Promise<unknown> => {
     const session = await getSession(ctx)
 
+    Logger.debug("[Session]", session)
     // check whitelist
     const whitelist: (string | number)[] | null = config.get('whitelist')
     if (whitelist && (!whitelist.includes(session.username!)) && (!whitelist.includes(session.telegramId))) {
