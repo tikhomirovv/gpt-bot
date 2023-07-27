@@ -14,6 +14,7 @@ import {
 } from "./actions"
 import { defaultSession } from "./session"
 import { checkConfig, checkSession, checkBalance } from "./middleware"
+import { connection } from "./db/db"
 
 // Log messages will be written to the window's console.
 Logger.useDefaults()
@@ -40,5 +41,14 @@ bot.on(message("text"), hearsText)
 bot.action(/^character:(\d+)$/, characterCallback)
 
 bot.launch()
-process.once("SIGINT", () => bot.stop("SIGINT"))
-process.once("SIGTERM", () => bot.stop("SIGTERM"))
+
+const exit = (signal: string) => {
+  bot.stop(signal)
+  connection?.close()
+}
+process.once("SIGINT", () => {
+  exit("SIGINT")
+})
+process.once("SIGTERM", () => {
+  exit("SIGTERM")
+})

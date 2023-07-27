@@ -1,3 +1,5 @@
+dev:
+	yarn dev
 up:
 	docker-compose -f ./docker-compose.yml up -d
 stop:
@@ -5,4 +7,4 @@ stop:
 build:
 	docker build -t gpt-bot .
 run:
-	docker run -d -p 3000:3000 --name gpt-bot --rm gpt-bot
+	docker run -d -p 3000:3000 --name gpt-bot --network gpt-bot --rm gpt-bot

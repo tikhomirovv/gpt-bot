@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose"
+import { connection } from "../db"
 
 export interface IUser {
   _id: string
@@ -23,4 +24,8 @@ const UserSchema: Schema = new Schema<IUser>(
 )
 
 const COLLECTION = "users"
-export default mongoose.model<IUser>("User", UserSchema, COLLECTION)
+const UserModel = connection
+  ? connection.model<IUser>("User", UserSchema, COLLECTION)
+  : null
+
+export default UserModel

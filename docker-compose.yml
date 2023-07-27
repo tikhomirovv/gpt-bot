@@ -11,7 +11,13 @@ services:
     volumes:
       - mongo-data:/data/db
     restart: always
+    networks:
+      - gpt-bot
 
 volumes:
   mongo-data:
     name: gpt-db
+
+networks:
+  gpt-bot:
+    name: gpt-bot

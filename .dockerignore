@@ -1,0 +1,5 @@
+.vscode
+.env.local
+dist
+node_modules
+TODO.md
