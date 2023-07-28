@@ -9,6 +9,7 @@ export interface IUser {
     balance: number
     used: number
   }
+  termsIsAgreed: boolean
 }
 
 const UserSchema: Schema = new Schema<IUser>(
@@ -19,6 +20,7 @@ const UserSchema: Schema = new Schema<IUser>(
       balance: { type: Number, required: true, default: 0 },
       used: { type: Number, required: true, default: 0 },
     },
+    termsIsAgreed: { type: Boolean, default: false },
   },
   { versionKey: false },
 )

@@ -1,14 +1,11 @@
 import User, { IUser } from "../models/user"
 import Logger from "js-logger"
-import { connection } from "../db"
+import { isConnected as dbIsConnected } from "../db"
 import { generateUserId } from "../../utils"
 
 const INIT_BALANCE = 10000
 
 export default {
-  isConnected () {
-    return connection?.readyState === 1
-  },
   async create(telegramId: number): Promise<IUser | null> {
     if (!User) {
       return null
@@ -17,8 +14,8 @@ export default {
       _id: generateUserId(telegramId),
       telegramId: telegramId,
       tokens: {
-        balance: INIT_BALANCE
-      }
+        balance: INIT_BALANCE,
+      },
     })
     return await model.save()
   },
@@ -41,9 +38,7 @@ export default {
     return await model.save()
   },
   async useTokens(telegramId: number, tokens: number) {
-    if (!this.isConnected()) {
-      return
-    }
+    if (!dbIsConnected()) return
     const user = await this.getByTelegramId(telegramId)
     if (user) {
       user.tokens.balance -= tokens
@@ -51,6 +46,22 @@ export default {
       await this.save(user)
     } else {
       Logger.error("[UserRepository] UseTokens: user not found", { telegramId })
+    }
+  },
+  async getTermsIsAgreed(telegramId: number): Promise<boolean> {
+    if (!dbIsConnected()) return false
+    const user = await this.getByTelegramId(telegramId)
+    if (!user) return false
+    return user.termsIsAgreed
+  },
+  async setTermsIsAgreed(telegramId: number, isAgreed: boolean): Promise<void> {
+    if (!dbIsConnected()) return
+    const user = await this.getByTelegramId(telegramId)
+    if (user) {
+      user.termsIsAgreed = isAgreed
+      await this.save(user)
+    } else {
+      Logger.error("[UserRepository] setIsAgreed: user not found", { telegramId, isAgreed })
     }
   },
 }

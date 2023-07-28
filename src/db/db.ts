@@ -15,3 +15,6 @@ const connect = (): Connection | null => {
 }
 
 export const connection = connect()
+export const isConnected = () => {
+    return connection?.readyState === 1
+}

@@ -11,10 +11,11 @@ import {
   reset,
   settings,
   start,
+  terms,
+  termsOk
 } from "./actions"
 import { defaultSession } from "./session"
-import { checkConfig, checkSession, checkBalance } from "./middleware"
-import { connection } from "./db/db"
+import { checkConfig, checkSession, checkUser } from "./middleware"
 
 // Log messages will be written to the window's console.
 Logger.useDefaults()
@@ -32,8 +33,12 @@ bot.help(help)
 bot.command("reset", reset)
 bot.command("settings", settings)
 
+bot.command("terms", terms)
+bot.action(/^terms:(\d+)$/, terms)
+bot.action(/^terms-ok:([0|1])$/, termsOk)
+
 // Дальше можно только с положительным балансом
-bot.use(checkBalance)
+bot.use(checkUser)
 bot.on(message("voice"), hearsVoice)
 bot.on(message("text"), hearsText)
 
@@ -42,13 +47,5 @@ bot.action(/^character:(\d+)$/, characterCallback)
 
 bot.launch()
 
-const exit = (signal: string) => {
-  bot.stop(signal)
-  connection?.close()
-}
-process.once("SIGINT", () => {
-  exit("SIGINT")
-})
-process.once("SIGTERM", () => {
-  exit("SIGTERM")
-})
+process.once("SIGINT", () => bot.stop("SIGINT"))
+process.once("SIGTERM", () => bot.stop("SIGTERM"))

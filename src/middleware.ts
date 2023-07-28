@@ -11,7 +11,6 @@ export const checkSession: MiddlewareFn<BotContext> = async (
   next: () => Promise<void>,
 ): Promise<unknown> => {
   const session = await getSession(ctx)
-
   Logger.debug("[Session]", session)
   // check whitelist
   const whitelist: (string | number)[] | null = config.get("whitelist")
@@ -26,23 +25,25 @@ export const checkSession: MiddlewareFn<BotContext> = async (
   return next()
 }
 
-export const checkBalance: MiddlewareFn<BotContext> = async (
+// Check balance & terms agreement
+export const checkUser: MiddlewareFn<BotContext> = async (
   ctx: BotContext,
   next: () => Promise<void>,
 ): Promise<unknown> => {
   const session = await getSession(ctx)
   const user = await userRepository.getByTelegramId(session.telegramId)
-  if (!user) {
-    return next()
-  }
-
+  if (!user) return next()
   if (user.tokens.balance <= 0) {
     await ctx.reply(messages.m("balance.insufficientFunds"))
     return
   }
-
+  if (!user.termsIsAgreed) {
+    await ctx.reply(messages.m("terms.agreeIsRequired"))
+    return
+  }
   return next()
 }
+
 // TODO: сделать проверку соответствия конфигурации
 export const checkConfig: MiddlewareFn<BotContext> = (
   ctx: BotContext,
