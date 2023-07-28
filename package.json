@@ -3,9 +3,9 @@
   "version": "0.5.0",
   "scripts": {
     "dev": "NODE_ENV=development nodemon",
-    "build": "NODE_ENV=production tsc && cp -R voices ./dist/voices",
-    "start": "rm dist -R && yarn build && node ./dist/src/index.js",
     "dev-cli": "NODE_ENV=development ts-node ./src/cli.ts",
+    "build": "rm dist -rf && tsc && cp -R voices ./dist/voices",
+    "start": "NODE_ENV=production node ./dist/src/index.js",
     "cli": "NODE_ENV=production node ./dist/src/cli.js"
   },
   "repository": "https://github.com/tikhomirovv/gpt-bot.git",
