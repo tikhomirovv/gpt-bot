@@ -7,7 +7,7 @@ import { convert, download, remove } from "./voice"
 import { openai } from "./openai"
 import { chatMessage } from "./chat"
 import { FmtString } from "telegraf/format"
-import { characterKeyboard, helpKeyboard, termsKeyboard } from "./keyboard"
+import { characterKeyboard, aboutKeyboard, termsKeyboard } from "./keyboard"
 import { getCharacterMessage } from "./character"
 import messages from "./messages"
 import * as packageJson from "../package.json"
@@ -20,12 +20,17 @@ export const start = async (ctx: BotContext) => {
 }
 
 export const help = async (ctx: BotContext) => {
+  const helpMessage = messages.m("help")
+  ctx.replyWithMarkdownV2(helpMessage)
+}
+
+export const about = async (ctx: BotContext) => {
   const session = await getSession(ctx)
   const botVersion: string = packageJson.version.replace(/\./g, "\\.")
   let message = `🤖 *GPT\\-бот v${botVersion}*`
-  const helpMessage = messages.m("help")
+  const helpMessage = messages.m("about")
   message += helpMessage ? "\n\n" + helpMessage : `\n*ID*: ${session.userId}`
-  ctx.replyWithMarkdownV2(message, helpKeyboard)
+  ctx.replyWithMarkdownV2(message, aboutKeyboard)
 }
 
 export async function hearsVoice(ctx: BotContext) {
