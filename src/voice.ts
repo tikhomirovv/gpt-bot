@@ -43,7 +43,7 @@ export const convert = async (filename: string): Promise<string> => {
             })
             .on('error', (err: any) => {
                 Logger.error(`Error converting ${filename}: ${err.message}`);
-                reject(err.message)
+                reject()
             })
             .save(output);
     })
