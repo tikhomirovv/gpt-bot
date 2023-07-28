@@ -4,12 +4,12 @@ import { message } from "telegraf/filters"
 import Logger from "js-logger"
 import { BotContext, Environment } from "./types/app"
 import {
+  character,
   characterCallback,
   hearsText,
   hearsVoice,
   help,
   reset,
-  settings,
   start,
   terms,
   termsOk
@@ -31,7 +31,7 @@ bot.use(session({ defaultSession }), checkConfig, checkSession)
 bot.start(start)
 bot.help(help)
 bot.command("reset", reset)
-bot.command("settings", settings)
+bot.command("character", character)
 
 bot.command("terms", terms)
 bot.action(/^terms:(\d+)$/, terms)

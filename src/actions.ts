@@ -8,7 +8,7 @@ import { openai } from "./openai"
 import { chatMessage } from "./chat"
 import { FmtString } from "telegraf/format"
 import { characterKeyboard, helpKeyboard, termsKeyboard } from "./keyboard"
-import { getCharacterMessage } from "./settings"
+import { getCharacterMessage } from "./character"
 import messages from "./messages"
 import * as packageJson from "../package.json"
 import config from "config"
@@ -95,9 +95,9 @@ export async function reset(ctx: BotContext) {
   }
 }
 
-export async function settings(ctx: BotContext) {
+export async function character(ctx: BotContext) {
   try {
-    await ctx.reply(messages.m("settings"), characterKeyboard)
+    await ctx.reply(messages.m("character"), characterKeyboard)
   } catch (e: any) {
     errorReply(ctx, e)
   }
