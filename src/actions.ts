@@ -7,7 +7,7 @@ import { convert, download, remove } from "./voice"
 import { openai } from "./openai"
 import { chatMessage } from "./chat"
 import { FmtString } from "telegraf/format"
-import { characterKeyboard, aboutKeyboard, termsKeyboard } from "./keyboard"
+import { characterKeyboard, helpKeyboard, termsKeyboard } from "./keyboard"
 import { getCharacterMessage } from "./character"
 import messages from "./messages"
 import * as packageJson from "../package.json"
@@ -16,21 +16,29 @@ import userRepository from "./db/repository/user"
 
 export const start = async (ctx: BotContext) => {
   const session = await getSession(ctx)
-  ctx.reply(messages.m("start.hello", { username: session.firstname }))
+  const hello = messages.m("start.hello", { username: session.firstname })
+  const botVersion: string = packageJson.version.replace(/\./g, "\\.")
+  const version = `🤖 *GPT\\-бот v${botVersion}*`
+  const aboutMessage = messages.m("start.about")
+  ctx.replyWithMarkdownV2(hello + "\n\n" + aboutMessage + "\n\n" + version)
 }
 
 export const help = async (ctx: BotContext) => {
   const helpMessage = messages.m("help")
-  ctx.replyWithMarkdownV2(helpMessage)
+  ctx.replyWithMarkdownV2(helpMessage, helpKeyboard)
 }
 
-export const about = async (ctx: BotContext) => {
+export const balance = async (ctx: BotContext) => {
   const session = await getSession(ctx)
-  const botVersion: string = packageJson.version.replace(/\./g, "\\.")
-  let message = `🤖 *GPT\\-бот v${botVersion}*`
-  const helpMessage = messages.m("about")
-  message += helpMessage ? "\n\n" + helpMessage : `\n*ID*: ${session.userId}`
-  ctx.replyWithMarkdownV2(message, aboutKeyboard)
+  const user = await userRepository.getByTelegramId(session.telegramId)
+  if (user) {
+    const message = messages.m("balance.info", {
+      id: user._id,
+      balance: user.tokens.balance,
+      used: user.tokens.used,
+    })
+    ctx.replyWithMarkdownV2(message)
+  }
 }
 
 export async function hearsVoice(ctx: BotContext) {
@@ -112,39 +120,39 @@ export async function terms(ctx: BotContext & { match?: RegExpExecArray }) {
   try {
     const currentPage = ctx.match ? parseInt(ctx.match[1]) : 1
     const pages: string[] = config.get("terms")
-    
+
     const session = await getSession(ctx)
     const isAgreed = await userRepository.getTermsIsAgreed(session.telegramId)
     const keyboard = termsKeyboard(currentPage, pages.length, isAgreed)
     const text =
-    pages[currentPage - 1] + `\n\n*\\[${currentPage}/${pages.length}\\]*`
+      pages[currentPage - 1] + `\n\n*\\[${currentPage}/${pages.length}\\]*`
     if (ctx.callbackQuery?.id) {
-        await ctx.telegram.editMessageText(
-            ctx.chat!.id,
-            ctx.callbackQuery.message!.message_id,
+      await ctx.telegram.editMessageText(
+        ctx.chat!.id,
+        ctx.callbackQuery.message!.message_id,
         undefined,
         text,
         {
-            ...keyboard,
-            parse_mode: "MarkdownV2",
-            disable_web_page_preview: true,
+          ...keyboard,
+          parse_mode: "MarkdownV2",
+          disable_web_page_preview: true,
         },
-        )
+      )
     } else {
-        await ctx.replyWithMarkdownV2(text, keyboard)
+      await ctx.replyWithMarkdownV2(text, keyboard)
     }
-} catch (e: any) {
+  } catch (e: any) {
     errorReply(ctx, e)
-}
+  }
 }
 export async function termsOk(ctx: BotContext & { match: RegExpExecArray }) {
-    try {
-    
-    
-    const isAgreed = !!parseInt(ctx.match[1])    
+  try {
+    const isAgreed = !!parseInt(ctx.match[1])
     const session = await getSession(ctx)
     await userRepository.setTermsIsAgreed(session.telegramId, isAgreed)
-    const text = isAgreed ? messages.m('terms.accepted') : messages.m('terms.notAccepted')
+    const text = isAgreed
+      ? messages.m("terms.accepted")
+      : messages.m("terms.notAccepted")
     const termsMessage = ctx.callbackQuery?.message
     if (termsMessage) {
       ctx.deleteMessage(termsMessage.message_id)

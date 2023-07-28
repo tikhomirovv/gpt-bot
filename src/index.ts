@@ -8,7 +8,7 @@ import {
   characterCallback,
   hearsText,
   hearsVoice,
-  about,
+  balance,
   help,
   reset,
   start,
@@ -31,7 +31,7 @@ bot.use(session({ defaultSession }), checkConfig, checkSession)
 // Commands and listening
 bot.start(start)
 bot.help(help)
-bot.command("about", about)
+bot.command("balance", balance)
 bot.command("reset", reset)
 bot.command("character", character)
 

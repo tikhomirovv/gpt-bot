@@ -6,7 +6,7 @@ const replaceParams = (message: string, params: any) => {
         return message;
     }
     return message.replace(/{{(\w+)}}/g, (match: string, varname: string) => {
-        return params[varname] || match;
+        return params[varname] !== undefined ? params[varname] : match;
     });
 }
 
