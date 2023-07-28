@@ -138,6 +138,7 @@ export async function terms(ctx: BotContext & { match?: RegExpExecArray }) {
           disable_web_page_preview: true,
         },
       )
+      await ctx.answerCbQuery()
     } else {
       await ctx.replyWithMarkdownV2(text, keyboard)
     }
@@ -158,6 +159,7 @@ export async function termsOk(ctx: BotContext & { match: RegExpExecArray }) {
       ctx.deleteMessage(termsMessage.message_id)
     }
 
+    await ctx.answerCbQuery()
     await ctx.reply(text)
     return
   } catch (e: any) {
