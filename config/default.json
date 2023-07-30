@@ -6,6 +6,7 @@
         "presence_penalty": 0.0,
         "top_p": 0.8
     },
+    "init_balance": 10000,
     "characters": [
         {
             "title": "🌿 Лайф-коуч",

@@ -1,6 +1,6 @@
 {
   "name": "gpt-bot",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "scripts": {
     "dev": "NODE_ENV=development nodemon",
     "dev-cli": "NODE_ENV=development ts-node ./src/cli.ts",

@@ -25,11 +25,12 @@ export const getSession = async (ctx: BotContext): Promise<UserSession> => {
 
 export const newSession = async (ctx: BotContext): Promise<UserSession> => {
   const telegramId = await getId(ctx)
-  const model = await userRepository.firstOrCreate(telegramId)
+  const username = ctx.from!.username || ''
+  const model = await userRepository.firstOrCreate(telegramId, username)
   return {
     userId: model ? model._id : generateUserId(telegramId),
     telegramId,
-    username: ctx.from!.username,
+    username,
     firstname: ctx.from!.first_name,
     history: { messages: [], tokens: 0 },
   }

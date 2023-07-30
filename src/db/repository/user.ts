@@ -2,19 +2,19 @@ import User, { IUser } from "../models/user"
 import Logger from "js-logger"
 import { isConnected as dbIsConnected } from "../db"
 import { generateUserId } from "../../utils"
+import config from "config"
 
-const INIT_BALANCE = 10000
+const initBalance: number = config.get("init_balance")
+type CreateUserInput = Partial<IUser> & { telegramId: number }
 
 export default {
-  async create(telegramId: number): Promise<IUser | null> {
-    if (!User) {
-      return null
-    }
+  async create(user: CreateUserInput): Promise<IUser | null> {
+    if (!User) return null
+    user._id = generateUserId(user.telegramId)
     const model = new User({
-      _id: generateUserId(telegramId),
-      telegramId: telegramId,
+      ...user,
       tokens: {
-        balance: INIT_BALANCE,
+        balance: initBalance,
       },
     })
     return await model.save()
@@ -23,12 +23,12 @@ export default {
     if (!User) {
       return null
     }
-    return await User.findOne({ telegramId: telegramId })
+    return await User.findOne({ telegramId })
   },
-  async firstOrCreate(telegramId: number): Promise<IUser | null> {
+  async firstOrCreate(telegramId: number, name: string): Promise<IUser | null> {
     let user = await this.getByTelegramId(telegramId)
     if (!user) {
-      user = await this.create(telegramId)
+      user = await this.create({ telegramId, name })
     }
     return user
   },
@@ -61,7 +61,10 @@ export default {
       user.termsIsAgreed = isAgreed
       await this.save(user)
     } else {
-      Logger.error("[UserRepository] setIsAgreed: user not found", { telegramId, isAgreed })
+      Logger.error("[UserRepository] setIsAgreed: user not found", {
+        telegramId,
+        isAgreed,
+      })
     }
   },
 }
