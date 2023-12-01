@@ -1,8 +1,8 @@
 {
   "name": "gpt-bot",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon",
+    "dev": "NODE_ENV=development bun ./src/index.ts",
     "dev-cli": "NODE_ENV=development ts-node ./src/cli.ts",
     "build": "rm dist -rf && tsc && cp -R voices ./dist/voices",
     "start": "NODE_ENV=production node ./dist/src/index.js",
@@ -22,6 +22,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "js-logger": "^1.6.1",
     "mongoose": "^7.4.1",
+    "node-openvpn": "^0.1.1",
     "openai": "^3.2.1",
     "telegraf": "^4.12.2"
   },
@@ -30,7 +31,6 @@
     "@types/crypto-js": "^4.1.1",
     "@types/fluent-ffmpeg": "^2.1.21",
     "@types/node": "^18.16.3",
-    "nodemon": "^2.0.22",
     "prettier": "^3.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"

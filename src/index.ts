@@ -13,7 +13,7 @@ import {
   reset,
   start,
   terms,
-  termsOk
+  termsOk,
 } from "./actions"
 import { defaultSession } from "./session"
 import { checkConfig, checkSession, checkUser } from "./middleware"
@@ -49,5 +49,11 @@ bot.action(/^character:(\d+)$/, characterCallback)
 
 bot.launch()
 
-process.once("SIGINT", () => bot.stop("SIGINT"))
-process.once("SIGTERM", () => bot.stop("SIGTERM"))
+const signals = ["SIGINT", "SIGTERM", "SIGQUIT"]
+signals.forEach((signal: string) =>
+  process.on(signal, () => {
+    Logger.info("[App] Exit", signal)
+    bot.stop(signal)
+    process.exit()
+  }),
+)
