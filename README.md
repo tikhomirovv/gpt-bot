@@ -1,10 +1,10 @@
 # GPT Bot
 
-GPT Bot - это Telegram бот, который использует OpenAI API для обработки естественного языка. Бот построен на Node.js и TypeScript и предоставляет простой интерфейс для общения с GPT-3.
+GPT Bot - это Telegram бот, который использует OpenAI API для обработки естественного языка. Бот построен на Node.js и TypeScript и предоставляет простой интерфейс для общения с ChatGPT.
 
 ## Особенности
 
- - Чат с OpenAI GPT-3.5
+ - Чат с OpenAI GPT
  - Расшифровка голосовых сообщений (понмает войсы на русском и отвечает на них)
  - Сохраненяет контекст разговора
  - Адаптивное урезает истории на основе количества токенов, чтобы не вылезать за лимиты запросов
@@ -65,7 +65,7 @@ MongoDB. Используется для:
 Существует `cli` команда для пополнения баланса:
 
 ```sh
-# пополнить баланс пользователя на 10000 токенов  
+# пополнить баланс пользователя на 10000 токенов
 yarn cli tokens-add --telegramId 9988775544 --q 10000
 ```
 
@@ -74,10 +74,10 @@ yarn cli tokens-add --telegramId 9988775544 --q 10000
 Можно изменить конфигурацию бота: текст сообщений, настройки для ChatGPT и прочее.
 Конфигурация лежит в [./config](). По-умолчанию загружается [default.json](./config/default.json), можно переопределить конфигурацию добавлением файлика с окружением (`{NODE_ENV_VAR}.json`, `production.json` например) или локальный `local.json` / `local-{NOTE_ENV_VAR}.json`.
 
-Подробнее о файлах конфигурации: https://github.com/node-config/node-config/wiki/Configuration-Files#file-load-order  
+Подробнее о файлах конфигурации: https://github.com/node-config/node-config/wiki/Configuration-Files#file-load-order
 Подробнее о настройках для ChatGPT: https://platform.openai.com/docs/api-reference/chat/create
 
-Будьте внимательны, некоторые сообщения используют формат Markdown, он требует экранирования спец.символов.  
+Будьте внимательны, некоторые сообщения используют формат Markdown, он требует экранирования спец.символов.
 Правила экранирования: https://core.telegram.org/bots/api#markdownv2-style
 
 **Whitelist** может быть `null` (отключен) или `(string | number)[]` - списком `username` или `chatId` в Телеграме.
