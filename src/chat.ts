@@ -1,7 +1,7 @@
 import { add as addMessageToHistory, getGPTMessages } from "./history"
 import { openai } from "./openai"
 import { UserSession } from "./types/app"
-import { ChatRole } from "./types/chat"
+import { ChatRole, GPTMessage } from "./types/chat"
 import userRepository from "./db/repository/user"
 import Logger from "js-logger"
 
@@ -15,10 +15,22 @@ export const chatMessage = async (
     role: ChatRole.User,
     tokens: 0,
   }).history
-  const completion = await openai.chat(
-    session.userId,
-    getGPTMessages(session.history),
-  )
+
+  let chatMessages: GPTMessage[] = getGPTMessages(session.history)
+  if (session.character) {
+    // Цhen using the character, the total tokens in fact will be greater than in history.
+    // This is not so bad, it’s just that the story will be able to accommodate a little less messages,
+    // but there will be no problem with limits
+    chatMessages = [
+      {
+        role: ChatRole.System,
+        content: session.character,
+      },
+      ...chatMessages,
+    ]
+  }
+
+  const completion = await openai.chat(session.userId, chatMessages)
   if (!completion) {
     throw new Error("GPT response error", completion)
   }

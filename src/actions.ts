@@ -110,7 +110,7 @@ export async function reset(ctx: BotContext) {
 
 export async function character(ctx: BotContext) {
   try {
-    await ctx.reply(messages.m("character"), characterKeyboard)
+    await ctx.reply(messages.m("character.choice"), characterKeyboard)
   } catch (e: any) {
     errorReply(ctx, e)
   }
@@ -173,10 +173,11 @@ export async function characterCallback(
   try {
     const action = ctx.match[1]
     const session = await resetSession(ctx)
-    const message = await getCharacterMessage(+action)
-    const answer = await sendToChat(ctx, session, message)
+    // const message = await getCharacterMessage(+action)
+    session.character = await getCharacterMessage(+action)
+    // const answer = await sendToChat(ctx, session, message)
     await ctx.answerCbQuery()
-    await ctx.reply(answer)
+    await ctx.reply(messages.m("character.selected"))
     return
   } catch (e: any) {
     errorReply(ctx, e)

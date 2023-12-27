@@ -1,6 +1,5 @@
 import Logger from "js-logger"
 import { ChatMessage, GPTMessage, History } from "./types/chat"
-import userRepository from "./db/repository/user"
 
 // history must be no more than this number of tokens
 const TOKENS_THRESHOLD = 3072
