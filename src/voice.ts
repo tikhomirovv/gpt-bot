@@ -36,7 +36,7 @@ export const convert = async (filename: string): Promise<string> => {
     return new Promise((resolve, reject) => {
         ffmpeg(filename)
             .toFormat('mp3')
-            .inputOptions('-t 30')
+            .inputOptions('-t 60')
             .on('end', () => {
                 Logger.debug(`Successfully converted ${filename} to ${output}`);
                 resolve(output)
