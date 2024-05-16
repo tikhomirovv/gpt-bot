@@ -22,6 +22,7 @@ export interface Character {
 export interface Config {
     whitelist: (string | number)[] | null
     gpt_params: GptParams
+    tokens_threshold: number;
     links: Link[]
     characters: Character[]
     messages: Messages

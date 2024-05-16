@@ -1,8 +1,10 @@
 import Logger from "js-logger"
 import { ChatMessage, GPTMessage, History } from "./types/chat"
+import config from "config"
 
 // history must be no more than this number of tokens
-const TOKENS_THRESHOLD = 3072
+const tokensTrheshold: number = config.get("tokens_threshold")
+// const TOKENS_THRESHOLD = 3072
 
 const sumTokens = (messages: ChatMessage[]): number => {
   return messages.reduce((sum, m) => sum + (m.tokens || 0), 0)
@@ -39,7 +41,7 @@ export const add = (
     })
   }
 
-  while (history.tokens > TOKENS_THRESHOLD) {
+  while (history.tokens > tokensTrheshold) {
     const removedMessage = history.messages.shift()
     Logger.debug("[History] Message removed from history", removedMessage)
     history.tokens = sumTokens(history.messages)
