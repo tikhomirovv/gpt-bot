@@ -86,11 +86,25 @@ export async function hearsText(ctx: BotContext) {
       reply_to_message_id: ctx.message.message_id,
     })
     const answer = await sendToChat(ctx, session, ctx.message.text)
-    await editMessage(
-      ctx,
-      { chat_id: waitMessage.chat.id, message_id: waitMessage.message_id },
-      answer,
-    )
+    // telegram message limit
+    if (answer.length > 4096) {
+      const parts = answer.match(/[\s\S]{1,4096}/g)!
+      const first = parts.shift() || ""
+      await editMessage(
+        ctx,
+        { chat_id: waitMessage.chat.id, message_id: waitMessage.message_id },
+        first,
+      )
+      parts.forEach((part) => {
+        sendMessage(ctx, part)
+      })
+    } else {
+      await editMessage(
+        ctx,
+        { chat_id: waitMessage.chat.id, message_id: waitMessage.message_id },
+        answer,
+      )
+    }
   } catch (e: any) {
     errorReply(ctx, e)
   } finally {
@@ -190,6 +204,10 @@ const sendTypingInterval = (ctx: BotContext): NodeJS.Timer => {
   return setInterval(() => {
     ctx.telegram.sendChatAction(ctx.chat!.id, "typing")
   }, interval)
+}
+
+const sendMessage = (ctx: BotContext, text: string | FmtString) => {
+  return ctx.telegram.sendMessage(ctx.chat!.id, text)
 }
 
 const editMessage = (
